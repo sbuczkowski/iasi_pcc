@@ -1,0 +1,36 @@
+* /home/sbuczko1/git/iasi_pcc/run_iasi_compress.sh
+BASH script controlling slurm runs of iasiPpcc_sompress_granule
+
+* /home/sbuczko1/git/iasi_pcc/run_iasi_compress.m
+matlab slurm script. matlab entry point to iasi pcc compression processing
+
+* /home/sbuczko1/git/iasi_pcc/iasi_pcc_compress_granule.m
+function iasi_pcc_compress_granule(infile, outfile)
+% IASI_PCC_COMPRESS_GRANULE compress IASI granule by Principal Components
+
+* /home/sbuczko1/git/iasi_pcc/iasi_pcc_to_netcdf.m
+function iasi_pcc_to_netcdf(outfile, data, pcsdata)
+% IASI_PCC_TO_NETCDF output pcc data to netcdf 
+
+
+* /home/sbuczko1/git/iasi_pcc/iasi_pcc_from_netcdf.m
+function data  = iasi_pcc_from_netcdf(infile)
+% IASI_PCC_FROM_NETCDF read IASI principal component radiance data
+
+* /home/sbuczko1/git/iasi_pcc/iasi_calculate_pcscores.m
+function pcscores = iasi_calculate_pcscores(radiances, eigendata)
+% IASI_CALCULATE_PCSCORES compress IASI radiance data 
+
+* /home/sbuczko1/git/iasi_pcc/iasi_read_eigenvectors.m
+function eigendata = iasi_read_eigenvectors(Evec_File)
+% IASI_READ_EIGENVECTORS read an IASI eigenvector file
+
+* /home/sbuczko1/git/iasi_pcc/iasi_reconstruct_radiances.m
+function radiances = iasi_reconstruct_radiances(pcscores, eigendata)
+% IASI_RECONSTRUCT_RADIANCES uncompress IASI radiance data
+
+* /home/sbuczko1/git/iasi_pcc/iasi_split_bands.m
+function radiances = iasi_split_bands(data)
+% IASI_SPLIT_BANDS split IASI radiance full spectrum into pcc bands 1-3
+
+
