@@ -23,5 +23,7 @@ eigendata.mean = h5read(Evec_File, ...
 eigendata.noise = NOISE_SCALE.*h5read(Evec_File, ...
                      '/Nedr');
 
+% placeholder for eigenvector limit
+eigendata.endoffset = 0;
 
 %% ****end function iasi_read_eigenvectors****

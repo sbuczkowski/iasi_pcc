@@ -15,7 +15,7 @@ function radiances = iasi_reconstruct_radiances(pcscores, eigendata)
 
 fprintf(1, '>>> Reconstructing radiances from compressed pca scores\n');
 
-[nspectra, nevigenvectors] = size(pcscores);
+[nspectra, neigenvectors] = size(pcscores);
 
 % noise and mean are global measures from the EUMETSAT training
 % set. Each one dimensional array has to replicated to match the
@@ -25,7 +25,8 @@ mMean = repmat(eigendata.mean, 1, nspectra);
 
 % project the pcscores back into the radiance space, add back the
 % EUMETSAT training set mean and noise normalize
-radiances = ((eigendata.eigenvectors * pcscores') + mMean) .* mNoise;
+lastevec = neigenvectors - eigendata.endoffset;
+radiances = ((eigendata.eigenvectors(:,1:lastevec) * pcscores(:,1:lastevec)') + mMean) .* mNoise;
 
 
 %% ****end function iasi_reconstruct_radiances****
