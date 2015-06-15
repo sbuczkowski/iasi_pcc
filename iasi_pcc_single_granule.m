@@ -3,11 +3,6 @@ addpath(genpath('/asl/matlib/'))
 
 IASI_PCC_DIR = '/asl/data/IASI/PCC';
 EVEC_FILE_BAND = {};
-ENDOFFSET = 80;   % don't use all available eigenvectors
-
-% $$$ struct eigendata;    % eigenvector related datastruct
-% $$$ struct cdata;        % compressed datastruct
-% $$$ struct rdata;        % reconstructed radiance datastruct 
 
 fprintf(1, '>>> Reading in eigenvector files\n');
 % $$$ Band 1 channel# 0 to 1996 (1997) Band 1: 645.00 – 1144.00 cm-1
@@ -25,7 +20,6 @@ EVEC_FILE_BAND{3} = ...
 for band=1:3
     eigendata(band) = iasi_read_eigenvectors(fullfile(IASI_PCC_DIR, ...
                                                       EVEC_FILE_BAND{band}));
-    eigendata(band).endoffset = ENDOFFSET;
 end
 
 
@@ -62,6 +56,7 @@ for band=1:3
                                                      eigendata(band));
 end
 
+mkoutput=false;
 if mkoutput
     % test plot of radiances as read in vs reconstructed
     outputdir = '/asl/data/IASI/PCC/testplots';

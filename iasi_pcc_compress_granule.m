@@ -1,4 +1,4 @@
-function  = iasi_pcc_compress_granule(infile)
+function iasi_pcc_compress_granule(infile, outfile)
 % IASI_PCC_COMPRESS_GRANULE compress IASI granule by Principal Components
 %
 % 
@@ -10,7 +10,6 @@ IASI_DIR = '/asl/data/IASI';
 IASI_PCC_DIR = fullfile(IASI_DIR, 'PCC');
 EVEC_FILE_BAND = {};
 
-outfile = fullfile(IASI_PCC_DIR, [infile, '.pcc']);
 
 fprintf(1, '>>> Reading in eigenvector files\n');
 % $$$ Band 1 channel# 0 to 1996 (1997) Band 1: 645.00 – 1144.00 cm-1
