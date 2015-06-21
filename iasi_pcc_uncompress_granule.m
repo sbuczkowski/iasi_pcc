@@ -1,5 +1,5 @@
-function [data, eigendata] = iasi_pcc_from_netcdf(infile)
-% IASI_PCC_FROM_NETCDF read IASI principal component radiance data
+function [data, eigendata] = iasi_pcc_uncompress_granule(infile)
+% IASI_PCC_UNCOMPRESS_GRANULE read IASI principal component radiance data
 %
 % 
 
@@ -12,7 +12,8 @@ eigendata = iasi_pcc_read_all_eigenvectors();
 % read attributes from pcc file
 dattr = {'eps_name', 'spacecraft_id', 'instrument_id', ...
          'process_version', 'state_vector_time'};
-% write out to file as netcdf attribute
+
+% read from file as netcdf attribute
 for i=1:length(dattr)
     temp = ncreadatt(infile,'/', dattr{i});
     data = setfield(data, dattr{i}, temp);
@@ -47,4 +48,4 @@ snr = -999;
 % reformat data for output
 data = setfield(data, 'IASI_Radiances', [rdata(1).rad', rdata(2).rad', rdata(3).rad']);
 
-%% ****end function iasi_pcc_from_netcdf****
+%% ****end function iasi_pcc_uncompress_granule****
