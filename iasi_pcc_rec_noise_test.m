@@ -4,11 +4,14 @@ addpath(genpath('~/git/matlib'))
 addpath(genpath('~/git/rtp_prod/iasi'))
 addpath('~/git/iasi_pcc')
 
+% $$$ BASEDIR = '~'; % root directory base of laptop data storage
+BASEDIR = ''; % root directory base on maya1/2
+
 % build iasi channel array
 fchan = (645:0.25:2760);
 
-IASIROOT='/asl/data/IASI/L1C/2013/02/10';
-PCCROOT='/asl/data/IASI/PCC/2013/02/10';
+IASIROOT=[BASEDIR '/asl/data/IASI/L1C/2013/02/10'];
+PCCROOT=[BASEDIR '/asl/data/IASI/PCC/2013/02/10'];
 
 
 
@@ -70,56 +73,72 @@ for i=1:numel(IASIFILE)
     ylabel('noise (mW m-2 sr-1 / cm-1)');
     subplot(2,1,2);
     %plot(fchan,noise.^2);
-    semilogy(fchan, noise.^2)
+    semilogy(fchan, srnoise)
     ylabel('power (noise^2)');
     xlabel('wavenumber');
 
     % plot spectra
+    nsp = [2,2]; % number of subplots (r x c)
+    ip = 1;
     f(i).fig(2) = figure;
-    subplot(2,2,1)
+    subplot(nsp(1), nsp(2), ip)
+    ip=ip+1;
     %plot(fchan, rrad);
     semilogy(fchan, rrad);
     ylabel('radiance (mW m-2 sr-1 / cm-1)');
-    subplot(2,2,2)
+    subplot(nsp(1), nsp(2), ip)
+    ip=ip+1;
     %plot(fchan, rrad_rec);
     semilogy(fchan, rrad_rec);
     ylabel('rec. radiance (mW m-2 sr-1 / cm-1)');
-    subplot(2,2,3)
+    subplot(nsp(1), nsp(2), ip)
+    ip=ip+1;
     %plot(fchan, srrad);
     semilogy(fchan, srrad);
     ylabel('power (radiance^2)');
     xlabel('wavenumber');
-    subplot(2,2,4);
+    subplot(nsp(1), nsp(2), ip)
+    ip=ip+1;
     %plot(fchan, srrad_rec);
     semilogy(fchan, srrad_rec);
     ylabel('rec. power (radiance^2)');
     xlabel('wavenumber');
 
     % plot SNR (linear and power)
+    nsp = [2,2]; % number of subplots (r x c)
+    ip = 1;
     f(i).fig(3) = figure;
-    subplot(2,2,1);
+    subplot(nsp(1), nsp(2), ip);
+    ip=ip+1;
     %plot(fchan, rrad./rnoise);
     semilogy(fchan, rrad./rnoise);
     ylabel('SNR (signal/noise)');
-    subplot(2,2,2);
+    subplot(nsp(1), nsp(2), ip);
+    ip=ip+1;
     %plot(fchan, rrad_rec./rnoise);
     semilogy(fchan, rrad_rec./rnoise);
     %    ylabel('SNR (signal/noise)');
-    subplot(2,2,3)
+    subplot(nsp(1), nsp(2), ip);
+    ip=ip+1;
     %plot(fchan,srrad./srnoise)
     semilogy(fchan,srrad./srnoise)
     ylabel('SNR (signal^2/noise^2)')
     xlabel('wavenumbers');
-    subplot(2,2,4)
+    subplot(nsp(1), nsp(2), ip);
+    ip=ip+1;
     %plot(fchan, srrad_rec./srnoise)
     semilogy(fchan, srrad_rec./srnoise)
     xlabel('wavenumbers');
 
     % plot SNR based on variances
+    nsp = [2,1]; % number of subplots (r x c)
+    ip = 1;
     f(i).fig(4) = figure;
-    subplot(2,1,1)
+    subplot(nsp(1), nsp(2), ip);
+    ip=ip+1;
     semilogy(fchan, vrrad./srnoise(1,:));
-    subplot(2,1,2)
+    subplot(nsp(1), nsp(2), ip);
+    ip=ip+1;
     semilogy(fchan, vrrad_rec./srnoise(1,:));
     
 end
