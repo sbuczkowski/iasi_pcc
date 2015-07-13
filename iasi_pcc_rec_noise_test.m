@@ -19,7 +19,9 @@ IASIFILE{1}='IASI_xxx_1C_M02_20130210000854Z_20130210001157Z';
 IASIFILE{2}='IASI_xxx_1C_M02_20130210011454Z_20130210011757Z';
 IASIFILE{3}='IASI_xxx_1C_M02_20130210023558Z_20130210023853Z';
 
-for i=1:numel(IASIFILE)
+imax = numel(IASIFILE);
+% $$$ imax = 1;
+for i=1:imax
     % read in raw IASI file
     data = readl1c_epsflip_all(fullfile(IASIROOT, IASIFILE{i}));
 
@@ -28,12 +30,6 @@ for i=1:numel(IASIFILE)
     radsize = size(rad);
     rrad = reshape(rad, radsize(1)*radsize(2), radsize(3));
 
-    % square radiances for snr 'power' comparison
-    srrad = rrad.^2;
-
-    % calculate variance of the granule by channel
-    vrrad = var(rrad);
-
     % uncompress IASI corresponding pcc file and reconstruct radiances
     [data_rec, eigendata] = iasi_pcc_uncompress_granule(fullfile(PCCROOT, ...
                                                       [IASIFILE{i} '.pcc']));
@@ -41,12 +37,6 @@ for i=1:numel(IASIFILE)
     % get reconstructed radiances (no reshaping necessary)
     rrad_rec = data_rec.IASI_Radiances;
 
-    % square radiances for snr 'power' comparison
-    srrad_rec = rrad_rec.^2;
-
-    % calculate variance of the reconstructed granule by channel
-    vrrad_rec = var(rrad_rec);
-    
     % massage eigensystem noise figure (returned from
     % uncompression)
     % the noise data supplied by EUMETSAT is, presumably, the
@@ -61,84 +51,94 @@ for i=1:numel(IASIFILE)
     % spectra more simply
     rnoise = repmat(noise, radsize(1)*radsize(2), 1);
     
-    % square noise for snr 'power' comparison (this also makes
-    % srnoise the noise variance)
-    srnoise = rnoise.^2;
-    
+    % massage eigensystem mean (returned from uncompression
+    % routine)
+    % The mean supplied by EUMETSAT is the mean radiance normalized
+    % by the training set noise figure
+    mean1 = eigendata(1).mean';
+    mean2 = eigendata(2).mean';
+    mean3 = eigendata(3).mean';
+
+    amean = [mean1 mean2 mean3];
+
+    % mean is (1 x nchan) array so, replicate to make it work with
+    % spectra more simply
+    rmean = repmat(amean, radsize(1)*radsize(2), 1);
+
     % plot noise
-    f(i).fig(1) = figure;
-    subplot(2,1,1);
+    ifig=1
+    f(i).fig(ifig) = figure;
     %plot(fchan, noise);
+    noise(noise < 0) = NaN;
     semilogy(fchan, noise);
-    ylabel('noise (mW m-2 sr-1 / cm-1)');
+    xlim([fchan(1)-50 fchan(end)]);
+    title('Training data noise figure');
+    ylabel('(mW m-2 sr-1 / cm-1)');
+    xlabel('wavenumber');
+    print(f(i).fig(ifig), '~/ToTransfer/iasi_noise.png', ...
+          '-dpng');
+    ifig = ifig+1;
+
+    % plot mean
+    f(i).fig(ifig) = figure;
+    subplot(2,1,1);
+    plot(fchan, amean);
+    xlim([fchan(1)-50 fchan(end)]);
+    title('Training data mean');
+    ylabel('noise normalized (Arb Units)');
     subplot(2,1,2);
-    %plot(fchan,noise.^2);
-    semilogy(fchan, srnoise)
-    ylabel('power (noise^2)');
+    plot(fchan, amean.*noise);
+    xlim([fchan(1)-50 fchan(end)]);
+    ylabel('mW m-2 sr-1 / cm-1');
     xlabel('wavenumber');
+    print(f(i).fig(ifig), '~/ToTransfer/iasi_mean.png', ...
+          '-dpng');
+    ifig = ifig+1;
+    
+% $$$     % plot spectra
+% $$$     nsp = [2,1]; % number of subplots (r x c)
+% $$$     ip = 1;
+% $$$     f(i).fig(3) = figure;
+% $$$     subplot(nsp(1), nsp(2), ip)
+% $$$     ip=ip+1;
+% $$$     %plot(fchan, rrad);
+% $$$     rrad(rrad < 0) = NaN;
+% $$$     semilogy(fchan, rrad);
+% $$$     ylabel('radiance (mW m-2 sr-1 / cm-1)');
+% $$$     subplot(nsp(1), nsp(2), ip)
+% $$$     ip=ip+1;
+% $$$     %plot(fchan, rrad_rec);
+% $$$     rrad_rec(rrad_rec < 0) = NaN;
+% $$$     semilogy(fchan, rrad_rec);
+% $$$     ylabel('rec. radiance (mW m-2 sr-1 / cm-1)');
+% $$$     xlabel('wavenumber');
 
-    % plot spectra
-    nsp = [2,2]; % number of subplots (r x c)
-    ip = 1;
-    f(i).fig(2) = figure;
-    subplot(nsp(1), nsp(2), ip)
-    ip=ip+1;
-    %plot(fchan, rrad);
-    semilogy(fchan, rrad);
-    ylabel('radiance (mW m-2 sr-1 / cm-1)');
-    subplot(nsp(1), nsp(2), ip)
-    ip=ip+1;
-    %plot(fchan, rrad_rec);
-    semilogy(fchan, rrad_rec);
-    ylabel('rec. radiance (mW m-2 sr-1 / cm-1)');
-    subplot(nsp(1), nsp(2), ip)
-    ip=ip+1;
-    %plot(fchan, srrad);
-    semilogy(fchan, srrad);
-    ylabel('power (radiance^2)');
+% $$$     % plot bias between original and reconstructed spectra
+% $$$     f(i).fig(4) = figure;
+% $$$     subplot(2,1,1)
+% $$$     bias = rrad - rrad_rec;
+% $$$     plot(fchan, bias)
+% $$$     title('bias (radiance - reconstruction)')
+% $$$     ylabel('mW m-2 sr-1 / cm-1')
+% $$$     subplot(2,1,2)
+% $$$     plot(fchan, std(bias))
+% $$$     ylabel('\sigma');
+% $$$     xlabel('wavenumber');
+% $$$     print(f(i).fig(4), '~/Desktop/ToTransfer/bias.png', '-dpng');
+    
+    % plot bias in noise normalized space
+    f(i).fig(ifig) = figure;
+    subplot(2,1,1)
+    nbias = (rrad - rrad_rec)./rnoise;
+    plot(fchan, mean(nbias))
+    xlim([fchan(1)-10, fchan(end)+10]);
+    title('bias (noise normalized)');
+    ylabel('granule avg bias');
+    subplot(2,1,2)
+    plot(fchan, std(nbias));
+    xlim([fchan(1)-10, fchan(end)+10]);
+    ylabel('\sigma');
     xlabel('wavenumber');
-    subplot(nsp(1), nsp(2), ip)
-    ip=ip+1;
-    %plot(fchan, srrad_rec);
-    semilogy(fchan, srrad_rec);
-    ylabel('rec. power (radiance^2)');
-    xlabel('wavenumber');
-
-    % plot SNR (linear and power)
-    nsp = [2,2]; % number of subplots (r x c)
-    ip = 1;
-    f(i).fig(3) = figure;
-    subplot(nsp(1), nsp(2), ip);
-    ip=ip+1;
-    %plot(fchan, rrad./rnoise);
-    semilogy(fchan, rrad./rnoise);
-    ylabel('SNR (signal/noise)');
-    subplot(nsp(1), nsp(2), ip);
-    ip=ip+1;
-    %plot(fchan, rrad_rec./rnoise);
-    semilogy(fchan, rrad_rec./rnoise);
-    %    ylabel('SNR (signal/noise)');
-    subplot(nsp(1), nsp(2), ip);
-    ip=ip+1;
-    %plot(fchan,srrad./srnoise)
-    semilogy(fchan,srrad./srnoise)
-    ylabel('SNR (signal^2/noise^2)')
-    xlabel('wavenumbers');
-    subplot(nsp(1), nsp(2), ip);
-    ip=ip+1;
-    %plot(fchan, srrad_rec./srnoise)
-    semilogy(fchan, srrad_rec./srnoise)
-    xlabel('wavenumbers');
-
-    % plot SNR based on variances
-    nsp = [2,1]; % number of subplots (r x c)
-    ip = 1;
-    f(i).fig(4) = figure;
-    subplot(nsp(1), nsp(2), ip);
-    ip=ip+1;
-    semilogy(fchan, vrrad./srnoise(1,:));
-    subplot(nsp(1), nsp(2), ip);
-    ip=ip+1;
-    semilogy(fchan, vrrad_rec./srnoise(1,:));
+    print(f(i).fig(ifig), ['~/ToTransfer/' IASIFILE{i} '-bias_norm.png'], '-dpng');
     
 end
