@@ -1,0 +1,33 @@
+* netcdf changes to be made
+** group nesting
+*** iasi_pcc_to_netcdf
+    - remove loop over bands (line 76ff)??
+    - change nccreate(..., '/Evecs/Band/pcscores', ...) to something
+      more along lines of nccreate(..., '/pcscores_bandN', ...)
+*** iasi_pcc_from_netcdf
+    - lines 35-42 changes commenserate to iasi_pcc_to_netcdf
+    - change ncread(..., '/Evecs/Band/pcscores', ...) to ncread(...,
+      '/pcscores_bandN', ...) to match iasi_pcc_to_netcdf
+*** iasi_pcc_uncompress_granule
+    - lines 36-43: same treatment as iasi_pcc_from_netcdf
+    - does this routine /really/ need to exist??
+
+** compression
+*** pack/scale/offset of non-pca data
+    - need to encode scale and offset attributes for each datafield as we store it
+
+*** pack/scale/offset of eigen data
+   Will require restructuring the netcdf write/read so, we should just
+   bite the bullet and do this in conjunction with the group nesting
+   changes above.
+   - For band1: 1: int32, 2-42: int16, rest: int8
+   - For band2:  1-2: int32  3-63: int16  rest: int8
+   - For band3: 1: int32  2:45: int16  rest: int8
+
+** General refactor
+   - in general, this code feels a bit cluttered. What can we do to make it easier to follow?
+
+** documentation
+   - Build out README.org
+
+

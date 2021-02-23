@@ -34,3 +34,6 @@ function radiances = iasi_split_bands(data)
 % IASI_SPLIT_BANDS split IASI radiance full spectrum into pcc bands 1-3
 
 
+
+
+
