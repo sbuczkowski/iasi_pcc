@@ -14,7 +14,8 @@ NPIXFOV = 4;    % number of IASI "pixels" per FOV (ie 2x2 = 4)
 NCHAN   = 8461; % number of IASI channels
 
 % $$$ Band 1 channel# 0 to 1996 (1997) Band 1: 645.00 – 1144.00 cm-1
-% $$$ Band 2 channel# 1997 to 5115 (3119) Band 2: 1144.25 - 1923.75 cm-1% $$$ Band 3 channel# 5116 to 8460 (3345) Band 3: 1924.00 – 2760.00 cm-1
+% $$$ Band 2 channel# 1997 to 5115 (3119) Band 2: 1144.25 - 1923.75 cm-1
+% $$$ Band 3 channel# 5116 to 8460 (3345) Band 3: 1924.00 – 2760.00 cm-1
 BANDSPLIT = [1144.0, 1923.75]; % band wavenumber interior boundaries
 
 % get number of FOVs in IASI data collection

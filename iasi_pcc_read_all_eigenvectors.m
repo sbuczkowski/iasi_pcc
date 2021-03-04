@@ -3,7 +3,7 @@ function eigendata = iasi_pcc_read_all_eigenvectors()
 %
 % 
 
-IASI_PCC_DIR = '/asl/data/IASI/PCC/eigen';
+IASI_PCC_DIR = '/asl/iasi/iasi1/pcc/eigen';
 EVEC_FILE_BAND = {};
 
 fprintf(1, '>>> Reading in eigenvector files\n');

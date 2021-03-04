@@ -11,13 +11,17 @@ function [mean_bias, bias_std, fchan] = iasi_pcc_compress_granule(infile, outfil
 %
 % bias_std : channel by channel standard deviation of the
 % reconstruction bias
-
-addpath(genpath('/asl/rtp_prod/iasi'))
+%
+% REQUIRES
+% readl1c_epsflip_all from rtp_prod2/iasi/readers
+funcname='iasi_pcc_compress_granule';
 
 % Read in EUMETSAT eigenvector data
+fprintf(1, '> %s: Read eigenvectors\n', funcname)
 eigendata = iasi_pcc_read_all_eigenvectors();
 
 % Read the IASI datafile
+fprintf(1, '> %s: Read IASI granule %s\n', funcname, infile)
 data = readl1c_epsflip_all(infile);
 rad = data.IASI_Radiances;
 radsize = size(rad);
@@ -31,12 +35,12 @@ radiances = iasi_split_bands(data);
 % create pc scores from radiances eignevectors
 cdata = iasi_pcc_create_all_pcscores(radiances, eigendata);
 
-keyboard
 % write pcc data out to netcdf file
+fprintf(1, '> %s: Write compressed IASI granule %s\n', funcname, outfile)
 iasi_pcc_to_netcdf(outfile, data, cdata)
 
 % calculate reconstruction bias stats and report back to calling
 % routine
-[mean_bias, bias_std, fchan] = iasi_pcc_recon_summary(cdata, rrad, eigendata);
+% $$$ [mean_bias, bias_std, fchan] = iasi_pcc_recon_summary(cdata, rrad, eigendata);
 
 %% ****end function iasi_pcc_compress_granule****

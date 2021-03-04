@@ -56,8 +56,10 @@ for i=1:length(datafields)
         % This case and next are written as netcdf data
         % variables. This section sets up name attributes for data dimensions
         colnames = {'nscans', 'c'};
+        continue
       case {'IASI_Image'}
         colnames = {'nscans', 'width'};
+        continue
       otherwise
         colnames = {'nscans', 'nfovs'};
     end
@@ -77,12 +79,12 @@ end
 % output file
 pcsfields = {'Band1', 'Band2', 'Band3'};
 for i=1:length(pcsfields)
-    dtemp = pcsdata(i).pcscores;
-    dsize = size(dtemp);
-    nccreate(outfile, ['/Evecs/' pcsfields{i} '/pcscores'], 'Dimensions', {'nobs', dsize(1), ...
-                        'nevecs', dsize(2)}, 'Format', 'netcdf4', ...
-             'DeflateLevel', 9);
-    ncwrite(outfile, ['/Evecs/' pcsfields{i} '/pcscores'], pcsdata(i).pcscores);
+    dsize = size(pcsdata(i).pcscores);
+    dtemp = reshape(pcsdata(i).pcscores, dsize(1)/4, 4, dsize(2));
+    nccreate(outfile, ['/Evecs/' pcsfields{i} '/pcscores'], ...
+             'Dimensions', {'nobs', dsize(1)/4, 'nfovs', 4, 'nevecs', ...
+                        dsize(2)}, 'Format', 'netcdf4', 'DeflateLevel', 9);
+    ncwrite(outfile, ['/Evecs/' pcsfields{i} '/pcscores'], dtemp);
 end
 
 
