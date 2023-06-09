@@ -1,226 +1,69 @@
 
-iasi_calculate_pcscores.m,69
-function pcscores 1,0
-mNoise 25,747
-mMean 26,792
-pcscores 30,956
+iasi_calculate_pcscores.m,94
+function pcscores = iasi_calculate_pcscores(radiances, eigendata)iasi_calculate_pcscores1,0
 
-iasi_pcc_compress_day.m,265
-% There are,12,336
-% There are, in some cases,12,336
-                outfile 37,1439
-                % whether infile was compressed to start or,44,1749
-                % whether infile was compressed to start or, not,44,1749
-                % it now 45,1824
+iasi_pcc_compress_day.m,64
+function iasi_pcc_compress_day(indir)iasi_pcc_compress_day1,0
 
-iasi_pcc_compress_granule.m,119
-function 1,0
-data 21,615
-rad 22,651
-radsize 23,678
-rrad 24,699
-radiances 29,933
-cdata 32,1017
-% routine38,1221
+iasi_pcc_compress_granule.m,113
+function [mean_bias, bias_std, fchan] = iasi_pcc_compress_granule(infile, outfile)iasi_pcc_compress_granule1,0
 
-iasi_pcc_create_all_pcscores.m,20
-function cdata 1,0
+iasi_pcc_create_all_pcscores.m,101
+function cdata = iasi_pcc_create_all_pcscores(radiances, eigendata)iasi_pcc_create_all_pcscores1,0
 
-iasi_pcc_evec_limit_test.m,849
-addpath(1,0
-ENDOFFSET 6,131
-% $$$ Band 1 channel# 0 to 13,415
-% $$$ Band 2 channel# 1997 to 17,598
-% $$$ Band 3 channel# 5116 to 21,783
-% $$$ iasidir 33,1222
-% $$$ iasifile 34,1271
-% $$$ iasidir 35,1339
-% $$$ iasifile 36,1388
-iasidir 37,1456
-iasifile 38,1500
-% $$$ iasidir 39,1562
-% $$$ iasifile 40,1612
-% $$$ iasidir=41,1680
-% $$$ iasifile 42,1729
-data 45,1823
-radiances 48,1934
-        spectrum 71,2706
-        fchan 72,2728
-        rad 73,2767
-        frad_rec 74,2802
-        bt 75,2838
-        fbt_rec 76,2889
-plot(84,3017
-% $$$         scrsz 101,3642
-% $$$ % $$$     ax=106,3890
-% $$$ % $$$     sTitle 108,4009
-% $$$             fchan 114,4204
-% $$$             rad 115,4253
-% $$$             frad_rec 116,4298
-% $$$             bt 117,4344
-% $$$             fbt_rec 118,4405
-% $$$             sTitle 125,4690
+iasi_pcc_evec_limit_test.m,0
 
-iasi_pcc_from_netcdf.m,292
-function 1,0
-eigendata 10,235
-dattr 13,314
-    data 18,529
-    data = setfield(data, dattr{i}, temp)18,529
-    clear temp;19,572
-dfname 23,632
-    data 31,1055
-    data = setfield(data, dfname{i}, temp)31,1055
-    clear temp;32,1099
-pcsfields 36,1150
-    rdata(i).rad rad41,1328
+iasi_pcc_from_netcdf.m,83
+function [data, eigendata] = iasi_pcc_from_netcdf(infile)iasi_pcc_from_netcdf1,0
 
-iasi_pcc_read_all_eigenvectors.m,157
-function eigendata 1,0
-EVEC_FILE_BAND 7,137
-% $$$ Band 1 channel# 0 to 10,209
-% $$$ Band 2 channel# 1997 to 14,392
-% $$$ Band 3 channel# 5116 to 18,577
+iasi_pcc_read_all_eigenvectors.m,89
+function eigendata = iasi_pcc_read_all_eigenvectors()iasi_pcc_read_all_eigenvectors1,0
 
-iasi_pcc_read_band_eigenvectors.m,126
-function eigendata 1,0
-eigendata.eigenvectors eigenvectors18,420
-eigendata.mean mean19,481
-eigendata.noise noise22,589
+iasi_pcc_read_band_eigenvectors.m,100
+function eigendata = iasi_pcc_read_band_eigenvectors(Evec_File)iasi_pcc_read_band_eigenvectors1,0
 
-iasi_pcc_rec_noise_test.m,296
-function iasi_pcc_rec_noise_test(1,0
-IASIFILE{IASIFILE19,472
-IASIFILE{IASIFILE20,535
-imax 22,599
-% $$$ imax 23,623
-    rad 29,779
-    radsize 30,810
-    rrad 31,835
-    % uncompress IASI corresponding pcc file and reconstruct radiances33,896
-    % get reconstructed radiances 37,1124
+iasi_pcc_rec_noise_test.m,63
+function iasi_pcc_rec_noise_test()iasi_pcc_rec_noise_test1,0
 
-iasi_pcc_recon_summary.m,47
-function 1,0
-radsize 10,271
-rrad_rec 19,589
+iasi_pcc_recon_summary.m,110
+function [mbias, bias_std, fchan] = iasi_pcc_recon_summary(cdata, rrad, eigendata)iasi_pcc_recon_summary1,0
 
-iasi_pcc_single_granule.m,265
-addpath(1,0
-mkoutput=41,1485
-        scrsz 50,1821
-% $$$     ax=55,2039
-% $$$     sTitle 57,2146
-            fchan 63,2305
-            rad 64,2348
-            frad_rec 65,2387
-            bt 66,2427
-            fbt_rec 67,2482
-            sTitle 74,2725
+iasi_pcc_single_granule.m,0
 
-iasi_pcc_to_netcdf.m,293
-datafields 38,1477
-        % should remove this field before calling this routine but,46,1708
-        % in case it is still here,47,1776
-        colnames 60,2398
-        colnames 62,2454
-    dtemp 65,2503
-    dsize 66,2546
-    clear dtemp;71,2800
-pcsfields 78,2911
-    dsize 81,3011
+iasi_pcc_to_netcdf.m,75
+function iasi_pcc_to_netcdf(outfile, data, pcsdata)iasi_pcc_to_netcdf1,0
 
-iasi_pcc_uncompress_granule.m,292
-function 1,0
-eigendata 10,249
-dattr 13,328
-    data 19,541
-    data = setfield(data, dattr{i}, temp)19,541
-    clear temp;20,584
-dfname 24,644
-    data 32,1067
-    data = setfield(data, dfname{i}, temp)32,1067
-    clear temp;33,1111
-pcsfields 37,1162
-    rdata(i).rad rad42,1340
+iasi_pcc_uncompress_granule.m,97
+function [data, eigendata] = iasi_pcc_uncompress_granule(infile)iasi_pcc_uncompress_granule1,0
 
-iasi_plot_datamean.m,132
-    bt 11,261
-    bt_rec 12,303
-    mdata 14,346
-    mdata_rec 15,376
-    hLine1 17,415
-    hold on;18,454
-    hLine2 19,467
+iasi_plot_datamean.m,0
 
-iasi_plot_datanoise.m,132
-    bt 11,261
-    bt_rec 12,303
-    sigma 14,346
-    sigma_rec 15,371
-    hLine1 17,405
-    hold on;18,444
-    hLine2 19,457
+iasi_plot_datanoise.m,0
 
-iasi_plot_mean.m,38
-    chans 10,258
-    hold on;14,315
+iasi_plot_mean.m,0
 
-iasi_plot_noise.m,53
-    chans 10,260
-    bt 11,292
-    hold on;14,345
+iasi_plot_noise.m,0
 
-iasi_read_eigenvectors.m,126
-function eigendata 1,0
-eigendata.eigenvectors eigenvectors19,426
-eigendata.mean mean20,487
-eigendata.noise noise23,595
+iasi_read_eigenvectors.m,82
+function eigendata = iasi_read_eigenvectors(Evec_File)iasi_read_eigenvectors1,0
 
-iasi_reconstruct_radiances.m,149
-function radiances 1,0
-mNoise 23,780
-mMean 24,827
-% project the pcscores back into the radiance space,26,873
-lastevec 28,988
-radiances 29,1036
+iasi_reconstruct_radiances.m,100
+function radiances = iasi_reconstruct_radiances(pcscores, eigendata)iasi_reconstruct_radiances1,0
 
-iasi_SNO_test.m,278
-addpath(1,0
-% $$$ Band 1 channel# 0 to 12,358
-% $$$ Band 2 channel# 1997 to 16,541
-% $$$ Band 3 channel# 5116 to 20,726
-iasidir 33,1178
-iasifiles 35,1223
-% $$$ nfiles 36,1278
-nfiles=37,1311
-    radiances 45,1507
-    rrads 64,2197
-    fields 67,2302
-    data 69,2581
+iasi_SNO_test.m,0
 
-iasi_split_bands.m,123
-function radiances 1,0
-NPIXFOV = 4;    % number of IASI "pixels" per FOV 13,370
-    radiances(band).chans chans43,1490
+iasi_split_bands.m,65
+function radiances = iasi_split_bands(data)iasi_split_bands1,0
 
-pcc_stats_test.m,13
-addpath(1,0
+pcc_stats_test.m,0
 
-plot_summaries.m,126
-avgmean 8,167
-avgstd 9,198
-sigmameans 10,229
-sigmastds 11,262
-msize 13,296
-onetoone 31,689
-scale=32,708
-figure(33,719
+plot_summaries.m,45
+function plot_summaries()plot_summaries1,0
 
-run_iasi_compress_by_day.m,62
-function run_iasi_compress_by_day(1,0
-% initial runs,10,348
+run_iasi_compress_by_day.m,65
+function run_iasi_compress_by_day()run_iasi_compress_by_day1,0
 
-run_iasi_compress.m,88
-function run_iasi_compress(1,0
-% files or this processing. For the initial runs,9,262
+run_iasi_compress.m,51
+function run_iasi_compress()run_iasi_compress1,0
+
+run_iasi_compress.sh,0
