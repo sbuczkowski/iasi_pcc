@@ -58,6 +58,7 @@ for i=1:length(datafields)
         colnames = {'nscans', 'c'};
         continue
       case {'IASI_Image'}
+        % do not carry IASI_Image forward
         colnames = {'nscans', 'width'};
         continue
       otherwise

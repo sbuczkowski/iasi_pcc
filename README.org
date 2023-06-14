@@ -1,40 +1,76 @@
-* /home/sbuczko1/git/iasi_pcc/run_iasi_compress.sh
+* General notes
+The routines in this repo are currently predicated mostly on the
+compression and reconstruction of /existing/ raw, non-pcc/pch
+granules. It is not yet written to be a general purpose PCC/PCH IASI
+reader. 
+
+* v1 notes
+
+** /home/sbuczko1/git/iasi_pcc/run_iasi_compress.sh
 BASH script controlling slurm runs of iasiPpcc_sompress_granule
 
-* /home/sbuczko1/git/iasi_pcc/run_iasi_compress.m
+** /home/sbuczko1/git/iasi_pcc/run_iasi_compress.m
 matlab slurm script. matlab entry point to iasi pcc compression processing
 
-* /home/sbuczko1/git/iasi_pcc/iasi_pcc_compress_granule.m
+** /home/sbuczko1/git/iasi_pcc/iasi_pcc_compress_granule.m
 function iasi_pcc_compress_granule(infile, outfile)
 % IASI_PCC_COMPRESS_GRANULE compress IASI granule by Principal Components
 
-* /home/sbuczko1/git/iasi_pcc/iasi_pcc_to_netcdf.m
+** /home/sbuczko1/git/iasi_pcc/iasi_pcc_to_netcdf.m
 function iasi_pcc_to_netcdf(outfile, data, pcsdata)
 % IASI_PCC_TO_NETCDF output pcc data to netcdf 
 
 
-* /home/sbuczko1/git/iasi_pcc/iasi_pcc_from_netcdf.m
+** /home/sbuczko1/git/iasi_pcc/iasi_pcc_from_netcdf.m
 function data  = iasi_pcc_from_netcdf(infile)
 % IASI_PCC_FROM_NETCDF read IASI principal component radiance data
 
-* /home/sbuczko1/git/iasi_pcc/iasi_calculate_pcscores.m
+** /home/sbuczko1/git/iasi_pcc/iasi_calculate_pcscores.m
 function pcscores = iasi_calculate_pcscores(radiances, eigendata)
 % IASI_CALCULATE_PCSCORES compress IASI radiance data 
 
-* /home/sbuczko1/git/iasi_pcc/iasi_read_eigenvectors.m
+** /home/sbuczko1/git/iasi_pcc/iasi_read_eigenvectors.m
 function eigendata = iasi_read_eigenvectors(Evec_File)
 % IASI_READ_EIGENVECTORS read an IASI eigenvector file
 
-* /home/sbuczko1/git/iasi_pcc/iasi_reconstruct_radiances.m
+** /home/sbuczko1/git/iasi_pcc/iasi_reconstruct_radiances.m
 function radiances = iasi_reconstruct_radiances(pcscores, eigendata)
 % IASI_RECONSTRUCT_RADIANCES uncompress IASI radiance data
 
-* /home/sbuczko1/git/iasi_pcc/iasi_split_bands.m
-function radiances = iasi_split_bands(data)
-% IASI_SPLIT_BANDS split IASI radiance full spectrum into pcc bands 1-3
+** /home/sbuczko1/git/iasi_pcc/iasi_split_bands.m
+ function radiances = iasi_split_bands(data)
+ % IASI_SPLIT_BANDS split IASI radiance full spectrum into pcc bands 1-3
 
 
 
 
 
 
+
+* v201 notes
+EUMETSAT has put out a test set of V201 PCH (principal component
+HYBRID) granules along with new eigenvectors. The PCH granules are,
+effectively, double-compressed: once in basis set of global
+eigenvectors that is instrument agnostic and a second time using a
+smaller set of eigenvectors based on the granule itself (the local
+pc-basis). As far as I can see at this date (6/12/2023), they are not
+releasing PCH compressed granules en masse (not that I have ever seen
+the archive of l1b granules ever released publically in the old
+eigenspace, either). Nor have they put out tools or specific advice
+for computing the local eigenspace from existing raw granules. They
+released (10-ish years now) a package of FORTRAN routines for building
+a training set to build your own global pc basis but nothing newer.
+
+Upshot is that we are no longer looking at the writing on the wall
+where IASI use of disk space is concerned as we were when this was
+last looked at 8 years ago but, rather, starting at the bricks too
+close to read the writing. So, we really are EXACTLY where we were 8
+years ago just with new eignevectors and less diskspace margin. Sadly,
+these new eigenvectors are not a simple drop-in replacement for the
+old so the old routines have to be updated.
+
+The only reasonable path forward in the short term, it would seem, is
+to update the old code to the new style eigenvectors and just leave
+the old archived in the git repo. The new compression/reconstruction
+will make use of the PCH global basis only as we have no way of
+replicating EUMETSAT's local pc compression at this time.
