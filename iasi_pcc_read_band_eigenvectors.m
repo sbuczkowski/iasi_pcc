@@ -10,17 +10,24 @@ function eigendata = iasi_pcc_read_band_eigenvectors(Evec_File)
 % mean -> double array : nchans x 1
 % noise -> double array : nchans x 1
 %
+Eversion = 'v201';
 
 NOISE_SCALE = 1E5;
 
 fprintf(1, '>>> Reading in IASI eigenvector file\n');
 
 eigendata.eigenvectors = h5read(Evec_File, '/Eigenvectors');
-eigendata.mean = h5read(Evec_File, ...
-                    '/Mean');
+eigendata.mean = NaN;
+
 % IASI stored noise values are scaled 
 eigendata.noise = NOISE_SCALE.*h5read(Evec_File, ...
                      '/Nedr');
+
+% v201 introduces a 'ReconstructionOperator' which is just the product
+% of the eigenvector and noise and can be used directly (really, we
+% only need to read and use this)
+% **NOTE**: matlab reads this in as transpose(R) not, R
+eigendata.ro = NOISE_SCALE .* h5read(Evec_File, '/ReconstructionOperator');
 
 % placeholder for eigenvector limit
 eigendata.endoffset = 0;
