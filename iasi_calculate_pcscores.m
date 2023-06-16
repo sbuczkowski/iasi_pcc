@@ -19,15 +19,8 @@ fprintf(1, '>>> Creating PCscores for radiance file\n');
 
 [nchan,nspectra] = size(radiances);
 
-% noise and mean are global measures from the EUMETSAT training
-% set. Each one dimensional array has to replicated to match the
-% number of spectra being processed in order to vectorize processing
-mNoise = repmat(eigendata.noise,1,nspectra);
-mMean = repmat(eigendata.mean,1,nspectra);
-
-% apply noise correction and mean subtraction to base radiances and
-% project spectra into the truncated pca eigenspace
-pcscores = (radiances./mNoise - mMean)' * eigendata.eigenvectors;
+% project spectra into the truncated pca eigenspace with Reconstruction Operator
+pcscores = eigendata.ro \ radiances;
 
 
 %% ****end function iasi_calculate_pcscores****
