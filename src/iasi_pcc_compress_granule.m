@@ -23,13 +23,8 @@ eigendata = iasi_pcc_read_all_eigenvectors();
 % Read the IASI datafile
 fprintf(1, '> %s: Read IASI granule %s\n', funcname, infile)
 data = readl1c_epsflip_all(infile);
-rad = data.IASI_Radiances;
-radsize = size(rad);
-rrad = reshape(rad, radsize(1)*radsize(2), radsize(3));
 
 % reformat the radiance data and split it into bands
-% *** At this point we have radiance in two forms (radiance/rrad)
-%     which is unneccesary. This should be refactored ***
 radiances = iasi_split_bands(data);
 
 % create pc scores from radiances eignevectors
@@ -38,9 +33,5 @@ cdata = iasi_pcc_create_all_pcscores(radiances, eigendata);
 % write pcc data out to netcdf file
 fprintf(1, '> %s: Write compressed IASI granule %s\n', funcname, outfile)
 iasi_pcc_to_netcdf(outfile, data, cdata)
-
-% calculate reconstruction bias stats and report back to calling
-% routine
-% $$$ [mean_bias, bias_std, fchan] = iasi_pcc_recon_summary(cdata, rrad, eigendata);
 
 %% ****end function iasi_pcc_compress_granule****
