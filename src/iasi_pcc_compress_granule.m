@@ -1,24 +1,18 @@
-function [mean_bias, bias_std, fchan] = iasi_pcc_compress_granule(infile, outfile)
+function [cdata, data] = iasi_pcc_compress_granule(infile, eigendata, outfile)
 % IASI_PCC_COMPRESS_GRANULE compress IASI granule by Principal Components
 %
 % INPUTS
 % infile : input IASI rganule file
-% outfile : output IASI pcc granule file
-%
+% eigendata : v201 reconstruction operator as read by iasi_pcc_read_all_eigenvectors
+% outfile : output IASI pcc granule file (or 'NULL' for CL use/testing)
+
 % OUTPUTS
-% bias : bias between input and reconstructed radiances in the
-% principal component eigenspace (radiance / training set noise)
-%
-% bias_std : channel by channel standard deviation of the
-% reconstruction bias
+% data : IASI granule data structure from readl1c_epsflip_all
+% cdata : pcscores calculated for radiances in data
 %
 % REQUIRES
 % readl1c_epsflip_all from rtp_prod2/iasi/readers
 funcname='iasi_pcc_compress_granule';
-
-% Read in EUMETSAT eigenvector data
-fprintf(1, '> %s: Read eigenvectors\n', funcname)
-eigendata = iasi_pcc_read_all_eigenvectors();
 
 % Read the IASI datafile
 fprintf(1, '> %s: Read IASI granule %s\n', funcname, infile)
@@ -29,6 +23,11 @@ radiances = iasi_split_bands(data);
 
 % create pc scores from radiances eignevectors
 cdata = iasi_pcc_create_all_pcscores(radiances, eigendata);
+
+% if no output is requested, just return 
+if strcmp('NULL', outfile)
+    return
+end
 
 % write pcc data out to netcdf file
 fprintf(1, '> %s: Write compressed IASI granule %s\n', funcname, outfile)
